@@ -119,14 +119,17 @@ async function readBucket(bucket: string): Promise<ApiMetricSnapshot> {
 }
 
 export async function recordApiMetric(
-  request: NextRequest,
+  request: Request,
   response: Response,
   startedAt: number,
 ): Promise<void> {
   try {
     const bucket = bucketId(startedAt);
     const key = bucketKey(bucket);
-    const endpoint = request.nextUrl.pathname;
+    const endpoint =
+      request instanceof NextRequest
+        ? request.nextUrl.pathname
+        : new URL(request.url).pathname;
     const status = response.status;
     const latencyMs = Math.max(0, Date.now() - startedAt);
     const pipeline = redis.pipeline();
@@ -155,21 +158,26 @@ export async function recordApiMetric(
   }
 }
 
-export function withMetrics<T extends (request: NextRequest, context?: unknown) => Promise<Response>>(
+export function withMetrics<T extends (...args: never[]) => Promise<Response>>(
   handler: T,
 ): T {
-  return (async (request: NextRequest, context?: unknown) => {
+  return (async (...args: Parameters<T>) => {
     const startedAt = Date.now();
+    const request: unknown = args[0];
     try {
-      const response = await handler(request, context);
-      await recordApiMetric(request, response, startedAt);
+      const response = await handler(...args);
+      if (request instanceof Request) {
+        await recordApiMetric(request, response, startedAt);
+      }
       return response;
     } catch (error) {
       const response = NextResponse.json(
         { error: 'Internal server error' },
         { status: 500 },
       );
-      await recordApiMetric(request, response, startedAt);
+      if (request instanceof Request) {
+        await recordApiMetric(request, response, startedAt);
+      }
       throw error;
     }
   }) as T;
