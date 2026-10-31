@@ -3,7 +3,8 @@ import { adminAuth as authAdmin } from '@/app/api/auth/firebase-admin';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { cookies } from 'next/headers';
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const cookieStore = await cookies();
@@ -51,3 +52,4 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     );
   }
 }
+);

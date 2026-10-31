@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/app/api/auth/firebase-admin';
 
-export async function POST(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     // Get authorization token
     const authHeader = request.headers.get('authorization');
@@ -50,3 +51,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+);

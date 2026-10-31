@@ -1,8 +1,9 @@
+import { withMetrics } from '@/lib/api-metrics';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getShipments } from '@/lib/db/shipments';
 
-export async function GET() {
+export const GET = withMetrics(async function GET() {
   try {
     const shipments = await getShipments();
     console.log('API Shipments Data:', JSON.stringify(shipments, null, 2));
@@ -22,3 +23,4 @@ export async function GET() {
     );
   }
 }
+);

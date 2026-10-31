@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registerForEvent } from '@/lib/db/registrations';
 
-export async function POST(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     const { eventId, userId } = await request.json();
 
@@ -36,3 +37,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+);

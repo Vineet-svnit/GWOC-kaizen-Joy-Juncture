@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAboutData } from '@/lib/db/content';
 
-export async function GET(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: NextRequest) {
   try {
     const data = await getAboutData();
 
@@ -29,3 +30,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+);

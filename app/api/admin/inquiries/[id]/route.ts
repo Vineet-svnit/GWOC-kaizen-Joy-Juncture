@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
-export async function DELETE(
+import { withMetrics } from '@/lib/api-metrics';
+export const DELETE = withMetrics(async function DELETE(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -32,7 +33,8 @@ export async function DELETE(
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
-export async function PATCH(
+);
+export const PATCH = withMetrics(async function PATCH(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -114,3 +116,4 @@ export async function PATCH(
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+);

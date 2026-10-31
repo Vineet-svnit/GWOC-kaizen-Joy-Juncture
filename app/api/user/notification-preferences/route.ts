@@ -1,7 +1,8 @@
 import { db, auth } from '@/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export async function GET(request: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: Request) {
   try {
     // Get Firebase auth token from header
     const authHeader = request.headers.get('Authorization');
@@ -60,8 +61,9 @@ export async function GET(request: Request) {
     );
   }
 }
+);
 
-export async function PUT(request: Request) {
+export const PUT = withMetrics(async function PUT(request: Request) {
   try {
     // Get Firebase auth token from header
     const authHeader = request.headers.get('Authorization');
@@ -96,3 +98,4 @@ export async function PUT(request: Request) {
     );
   }
 }
+);

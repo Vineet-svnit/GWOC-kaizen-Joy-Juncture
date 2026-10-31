@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { headers } from 'next/headers';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/user/tier-perks - Get user's tier and available perks
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const headersList = await headers();
     const authorization = headersList.get('authorization');
@@ -66,3 +67,4 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+);

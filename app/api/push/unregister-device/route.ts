@@ -1,7 +1,8 @@
 import { db, auth } from '@/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export async function POST(request: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: Request) {
   try {
     // Get Firebase auth token from header
     const authHeader = request.headers.get('Authorization');
@@ -45,3 +46,4 @@ export async function POST(request: Request) {
     );
   }
 }
+);

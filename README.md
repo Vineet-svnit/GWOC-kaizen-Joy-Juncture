@@ -214,6 +214,9 @@ FIREBASE_ADMIN_PRIVATE_KEY=your_private_key
 UPSTASH_REDIS_REST_URL=https://your-database.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your_token
 
+# API metrics authentication
+METRICS_API_KEY=replace_with_a_long_random_metrics_key
+
 # Razorpay
 NEXT_PUBLIC_RAZORPAY_KEY_ID=your_key_id
 RAZORPAY_KEY_SECRET=your_key_secret
@@ -235,6 +238,22 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 **Detailed setup instructions**: See [`.env.example`](./.env.example)
+
+### API Metrics
+
+API requests are aggregated in one-minute Upstash Redis buckets. Use the
+configured bearer key to read current or historical metrics:
+
+```bash
+curl -H "Authorization: Bearer $METRICS_API_KEY" \
+  http://localhost:3000/api/metrics
+
+curl -H "Authorization: Bearer $METRICS_API_KEY" \
+  "http://localhost:3000/api/metrics/history?from=2026-10-31T00:00:00Z&to=2026-10-31T23:59:59Z&interval=1m"
+```
+
+`from` and `to` accept ISO-8601 timestamps. The history endpoint currently
+supports `interval=1m`.
 
 ---
 

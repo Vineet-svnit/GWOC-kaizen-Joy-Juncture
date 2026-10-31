@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { Timestamp } from 'firebase-admin/firestore';
 
+import { withMetrics } from '@/lib/api-metrics';
 export const dynamic = 'force-dynamic'; // Disable caching for live feel
 
-export async function GET() {
+export const GET = withMetrics(async function GET() {
   try {
     const messages: string[] = [];
     const now = new Date();
@@ -94,3 +95,4 @@ export async function GET() {
     });
   }
 }
+);

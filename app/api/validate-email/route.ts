@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
 
@@ -52,3 +53,4 @@ export async function GET(request: Request) {
         return NextResponse.json({ isValid: true });
     }
 }
+);

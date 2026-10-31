@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // POST /api/games/content/initialize - Initialize default content for all games (Admin only)
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const authorization = req.headers.get('authorization');
@@ -84,3 +85,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 });
   }
 }
+);

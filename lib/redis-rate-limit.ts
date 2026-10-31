@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { redis, RedisKeys, getWindowTimestamp } from './redis';
+import { recordApiMetric } from './api-metrics';
 
 export interface RateLimitConfig {
     /**
@@ -92,6 +93,7 @@ export function withRateLimit(
     handler: (req: NextRequest) => Promise<NextResponse>
 ) {
     return async (req: NextRequest): Promise<NextResponse> => {
+        const startedAt = Date.now();
         const result = await checkRateLimit(req, config);
 
         // Add rate limit headers
@@ -101,7 +103,7 @@ export function withRateLimit(
         headers.set('X-RateLimit-Reset', result.reset.toString());
 
         if (!result.success) {
-            return NextResponse.json(
+            const response = NextResponse.json(
                 {
                     error: 'Too many requests',
                     message: `Rate limit exceeded. Try again in ${Math.ceil(result.reset - Date.now() / 1000)} seconds.`,
@@ -111,15 +113,27 @@ export function withRateLimit(
                     headers,
                 }
             );
+            await recordApiMetric(req, response, startedAt);
+            return response;
         }
 
-        // Call handler and add headers to response
-        const response = await handler(req);
-        headers.forEach((value, key) => {
-            response.headers.set(key, value);
-        });
+        try {
+            // Call handler and add headers to response
+            const response = await handler(req);
+            headers.forEach((value, key) => {
+                response.headers.set(key, value);
+            });
 
-        return response;
+            await recordApiMetric(req, response, startedAt);
+            return response;
+        } catch (error) {
+            const response = NextResponse.json(
+                { error: 'Internal server error' },
+                { status: 500, headers },
+            );
+            await recordApiMetric(req, response, startedAt);
+            throw error;
+        }
     };
 }
 

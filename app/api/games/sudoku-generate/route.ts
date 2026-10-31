@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { withMetrics } from '@/lib/api-metrics';
 // Sudoku Generator
 class SudokuGenerator {
   private board: number[][];
@@ -112,7 +113,7 @@ class SudokuGenerator {
   }
 }
 
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const difficulty = req.nextUrl.searchParams.get('difficulty') || 'medium';
     
@@ -133,3 +134,4 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+);

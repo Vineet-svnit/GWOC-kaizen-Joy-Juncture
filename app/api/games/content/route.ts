@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/games/content?gameId={id} - Get game content
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const gameId = searchParams.get('gameId');
@@ -23,9 +24,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // POST /api/games/content - Update game content (Admin only)
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
     
@@ -63,9 +65,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // DELETE /api/games/content - Delete content item (Admin only)
-export async function DELETE(req: NextRequest) {
+export const DELETE = withMetrics(async function DELETE(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
     
@@ -112,3 +115,4 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);

@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { headers } from 'next/headers';
 
+import { withMetrics } from '@/lib/api-metrics';
 // POST /api/admin/initialize-vouchers - Initialize default vouchers
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const headersList = await headers();
     const authorization = headersList.get('authorization');
@@ -150,9 +151,10 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+);
 
 // GET /api/admin/initialize-vouchers - Check initialization status
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const vouchersRef = adminDb.collection('voucherTemplates');
     const snapshot = await vouchersRef.limit(1).get();
@@ -170,3 +172,4 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+);

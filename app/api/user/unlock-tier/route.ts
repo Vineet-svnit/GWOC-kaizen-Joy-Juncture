@@ -3,8 +3,9 @@ import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { headers } from 'next/headers';
 
+import { withMetrics } from '@/lib/api-metrics';
 // POST /api/user/unlock-tier - Purchase tier unlock with JP
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const headersList = await headers();
     const authorization = headersList.get('authorization');
@@ -86,3 +87,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+);

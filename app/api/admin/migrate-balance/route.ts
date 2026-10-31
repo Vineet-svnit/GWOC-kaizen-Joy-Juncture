@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { headers } from 'next/headers';
 
+import { withMetrics } from '@/lib/api-metrics';
 // POST /api/admin/migrate-balance - Migrate points field to balance field for all users
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const headersList = await headers();
@@ -82,3 +83,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+);

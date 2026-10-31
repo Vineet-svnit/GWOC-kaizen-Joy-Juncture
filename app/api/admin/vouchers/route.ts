@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/admin/vouchers - Get all voucher templates
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const vouchersSnap = await adminDb.collection('voucherTemplates').get();
     const vouchers = vouchersSnap.docs.map(doc => ({
@@ -16,9 +17,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // POST /api/admin/vouchers - Create/Update voucher template
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
     
@@ -53,9 +55,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // DELETE /api/admin/vouchers - Delete voucher template
-export async function DELETE(req: NextRequest) {
+export const DELETE = withMetrics(async function DELETE(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
     
@@ -90,3 +93,4 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);

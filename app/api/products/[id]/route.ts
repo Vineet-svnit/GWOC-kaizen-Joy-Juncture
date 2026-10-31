@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProductById } from '@/lib/firebase';
 
+import { withMetrics } from '@/lib/api-metrics';
 export const dynamic = 'force-dynamic';
 
 // GET /api/products/[id] - Get single product by ID
-export async function GET(
+export const GET = withMetrics(async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -40,3 +41,4 @@ export async function GET(
     );
   }
 }
+);

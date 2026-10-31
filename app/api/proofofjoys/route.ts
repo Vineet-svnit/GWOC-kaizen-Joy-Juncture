@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebaseAdmin'; // Correct import
+import { adminDb } from '@/lib/firebaseAdmin'; import { withMetrics } from '@/lib/api-metrics';
+// Correct import
 import { Testimonial } from '@/lib/types';
 import { Timestamp } from 'firebase-admin/firestore'; // Admin SDK types
 
 // Force dynamic to ensure we get fresh data
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const getAll = searchParams.get('all') === 'true';
@@ -42,8 +43,9 @@ export async function GET(req: NextRequest) {
         );
     }
 }
+);
 
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
     try {
         const data = await req.json();
 
@@ -81,8 +83,9 @@ export async function POST(req: NextRequest) {
         );
     }
 }
+);
 
-export async function PATCH(req: NextRequest) {
+export const PATCH = withMetrics(async function PATCH(req: NextRequest) {
     try {
         const data = await req.json();
         const { id, status, image } = data;
@@ -126,8 +129,9 @@ export async function PATCH(req: NextRequest) {
         );
     }
 }
+);
 
-export async function DELETE(req: NextRequest) {
+export const DELETE = withMetrics(async function DELETE(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get('id');
@@ -150,3 +154,4 @@ export async function DELETE(req: NextRequest) {
         );
     }
 }
+);

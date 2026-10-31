@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 
-export async function POST(req: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // 1. Authenticate Request
     const authHeader = req.headers.get('authorization');
@@ -245,3 +246,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+);

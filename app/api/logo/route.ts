@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET: Fetch current logo URL
-export async function GET() {
+export const GET = withMetrics(async function GET() {
     try {
         const docRef = doc(db, 'content', 'siteSettings');
         const docSnap = await getDoc(docRef);
@@ -19,9 +20,10 @@ export async function GET() {
         return NextResponse.json({ error: 'Failed to fetch logo' }, { status: 500 });
     }
 }
+);
 
 // POST: Update logo URL
-export async function POST(request: NextRequest) {
+export const POST = withMetrics(async function POST(request: NextRequest) {
     try {
         const { logoUrl } = await request.json();
 
@@ -38,3 +40,4 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to update logo' }, { status: 500 });
     }
 }
+);

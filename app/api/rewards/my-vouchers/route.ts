@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/rewards/my-vouchers - Get user's redeemed vouchers
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
     
@@ -40,3 +41,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);

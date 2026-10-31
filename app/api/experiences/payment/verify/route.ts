@@ -3,7 +3,8 @@ import crypto from 'crypto';
 import admin, { db, auth } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 
-export async function POST(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: NextRequest) {
     try {
         const {
             razorpay_payment_id,
@@ -176,3 +177,4 @@ export async function POST(request: NextRequest) {
         );
     }
 }
+);

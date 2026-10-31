@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
-export async function GET(req: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(req: NextRequest) {
     try {
         const authorization = req.headers.get('authorization');
         if (!authorization?.startsWith('Bearer ')) {
@@ -34,3 +35,4 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+);

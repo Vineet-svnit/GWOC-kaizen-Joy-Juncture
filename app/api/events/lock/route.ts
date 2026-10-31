@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
+import { withMetrics } from '@/lib/api-metrics';
 // Lock duration in minutes
 const LOCK_DURATION_MINUTES = 10;
 
-export async function POST(request: NextRequest) {
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     let body;
     try {
@@ -111,8 +112,9 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+);
 
-export async function DELETE(request: NextRequest) {
+export const DELETE = withMetrics(async function DELETE(request: NextRequest) {
   try {
     const { lockId, eventId, userId } = await request.json();
     const locksRef = adminDb.collection('event_locks');
@@ -146,3 +148,4 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+);

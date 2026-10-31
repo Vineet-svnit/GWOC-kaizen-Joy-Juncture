@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 
+import { withMetrics } from '@/lib/api-metrics';
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function GET() {
+export const GET = withMetrics(async function GET() {
     try {
         const result = await cloudinary.api.resources({
             max_results: 100,
@@ -19,8 +20,9 @@ export async function GET() {
         return NextResponse.json({ error: 'Failed to fetch resources' }, { status: 500 });
     }
 }
+);
 
-export async function DELETE(request: Request) {
+export const DELETE = withMetrics(async function DELETE(request: Request) {
     try {
         const { public_id } = await request.json();
 
@@ -40,3 +42,4 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+);

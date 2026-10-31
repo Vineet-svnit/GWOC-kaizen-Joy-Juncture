@@ -1,7 +1,8 @@
 import { db, auth } from '@/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export async function GET(request: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: Request) {
   try {
     // Get Firebase auth token from header
     const authHeader = request.headers.get('Authorization');
@@ -36,3 +37,4 @@ export async function GET(request: Request) {
     return Response.json({ error: 'Failed to fetch devices' }, { status: 500 });
   }
 }
+);

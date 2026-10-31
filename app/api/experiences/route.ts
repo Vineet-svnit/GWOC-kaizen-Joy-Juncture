@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth, db } from '@/lib/firebase-admin';
 import { ExperienceCategory } from '@/lib/types';
 
-export async function GET(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: NextRequest) {
   try {
     /* ---------------- AUTH ---------------- */
     const authHeader = request.headers.get('authorization');
@@ -48,8 +49,9 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+);
 
-export async function POST(request: NextRequest) {
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     /* ---------------- AUTH ---------------- */
     const authHeader = request.headers.get('authorization');
@@ -113,3 +115,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+);

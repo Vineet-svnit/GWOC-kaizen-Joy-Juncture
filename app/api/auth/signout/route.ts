@@ -1,7 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { adminAuth } from '../firebase-admin';
 
-export async function POST(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     // Get the session cookie from the request
     const cookieValue = request.headers.get('cookie')?.split(';')
@@ -34,4 +35,5 @@ export async function POST(request: NextRequest) {
     console.error("Error signing out:", error);
     return NextResponse.json({ error: "Failed to sign out" }, { status: 500 });
   }
-} 
+}
+);

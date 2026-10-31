@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth, db } from '@/lib/firebase-admin';
 import { ExperienceEnquiry } from '@/lib/types';
 
-export async function GET(
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -57,8 +58,9 @@ export async function GET(
     );
   }
 }
+);
 
-export async function PATCH(
+export const PATCH = withMetrics(async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -185,3 +187,4 @@ export async function PATCH(
     );
   }
 }
+);

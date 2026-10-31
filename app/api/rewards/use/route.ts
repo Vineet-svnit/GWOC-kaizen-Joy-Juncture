@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // POST /api/rewards/use - Mark voucher as used after successful payment
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
     
@@ -50,3 +51,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);

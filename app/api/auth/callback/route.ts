@@ -1,7 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { adminAuth, adminDb } from '../firebase-admin';
 
-export async function GET(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const idToken = requestUrl.searchParams.get("token");
   // Default redirect target
@@ -89,3 +90,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+);

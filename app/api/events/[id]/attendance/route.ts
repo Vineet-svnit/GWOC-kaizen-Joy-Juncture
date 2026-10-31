@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase-admin';
 
-export async function GET(
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -39,3 +40,4 @@ export async function GET(
     );
   }
 }
+);

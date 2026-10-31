@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LogAggregator } from '@/lib/log-aggregator';
 
-export async function GET(req: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(req: NextRequest) {
     try {
         const stats = await LogAggregator.getStats();
         return NextResponse.json({ stats });
@@ -13,3 +14,4 @@ export async function GET(req: NextRequest) {
         );
     }
 }
+);

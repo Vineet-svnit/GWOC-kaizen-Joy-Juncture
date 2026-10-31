@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { getServerTodayString } from '@/lib/date-utils';
 
+import { withMetrics } from '@/lib/api-metrics';
 const FALLBACK_GAMES = [
   'sudoku', 'riddle', 'puzzles', 'wordle', 'chess',
   'trivia', '2048', 'hangman', 'wordsearch', 'mathquiz',
@@ -9,7 +10,7 @@ const FALLBACK_GAMES = [
 ];
 
 // GET /api/games/rotation-policy - Get current rotation policy
-export async function GET() {
+export const GET = withMetrics(async function GET() {
   try {
     const policyRef = adminDb.doc('settings/rotationPolicy');
     const policySnap = await policyRef.get();
@@ -99,9 +100,10 @@ export async function GET() {
     return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 });
   }
 }
+);
 
 // POST /api/games/rotation-policy - Update rotation policy (Admin only)
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const authorization = req.headers.get('authorization');
@@ -191,9 +193,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // PUT /api/games/rotation-policy/rotate - Manually trigger rotation (Admin only)
-export async function PUT(req: NextRequest) {
+export const PUT = withMetrics(async function PUT(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const authorization = req.headers.get('authorization');
@@ -276,3 +279,4 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);

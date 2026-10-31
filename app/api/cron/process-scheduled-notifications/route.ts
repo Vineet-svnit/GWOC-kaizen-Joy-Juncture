@@ -3,7 +3,8 @@ import { adminDb, adminAuth } from '@/lib/firebaseAdmin';
 import { sendNotifications } from '@/lib/notification-service';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export async function GET(request: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: Request) {
     // Optional: Add a simple secret check if needed
     // Note: Vercel cron jobs don't send auth headers, so we check for CRON_SECRET in query params or headers
     const authHeader = request.headers.get('authorization');
@@ -156,3 +157,4 @@ export async function GET(request: Request) {
         }, { status: 500 });
     }
 }
+);

@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { db, auth } from '@/lib/firebase-admin';
 
+import { withMetrics } from '@/lib/api-metrics';
 const razorpay = new Razorpay({
     key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
     key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
-export async function POST(request: NextRequest) {
+export const POST = withMetrics(async function POST(request: NextRequest) {
     try {
         const { amount, currency = 'INR', receipt, notes } = await request.json();
 
@@ -74,3 +75,4 @@ export async function POST(request: NextRequest) {
         );
     }
 }
+);

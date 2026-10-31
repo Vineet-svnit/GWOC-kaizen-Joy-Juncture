@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/app/api/auth/firebase-admin';
 
+import { withMetrics } from '@/lib/api-metrics';
 export const dynamic = 'force-dynamic';
 
 const DEFAULT_SETTINGS = {
@@ -25,7 +26,7 @@ const DEFAULT_SETTINGS = {
   currency: 'INR',
 };
 
-export async function GET(request: NextRequest) {
+export const GET = withMetrics(async function GET(request: NextRequest) {
   try {
     // Optionally verify admin token for sensitive settings
     // For now, let's keep it open for the checkout page but we might want to split it later
@@ -47,3 +48,4 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(DEFAULT_SETTINGS, { status: 200 });
   }
 }
+);

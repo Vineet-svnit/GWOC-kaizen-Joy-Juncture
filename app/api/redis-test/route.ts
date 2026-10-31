@@ -1,3 +1,4 @@
+import { withMetrics } from '@/lib/api-metrics';
 /**
  * Quick Redis Connection Test
  * This will write a test key to verify Redis is working
@@ -8,7 +9,7 @@ import { redis } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export const GET = withMetrics(async function GET() {
     try {
         // Write a test key
         const testKey = 'test:connection:' + Date.now();
@@ -37,3 +38,4 @@ export async function GET() {
         }, { status: 500 });
     }
 }
+);

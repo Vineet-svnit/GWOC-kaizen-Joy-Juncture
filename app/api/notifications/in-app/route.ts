@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/app/api/auth/firebase-admin';
 import { cookies } from 'next/headers';
 
-export async function GET(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: NextRequest) {
   try {
     // Try to get session cookie first
     const cookieStore = await cookies();
@@ -70,3 +71,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+);

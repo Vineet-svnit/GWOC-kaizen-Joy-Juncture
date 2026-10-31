@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth, db } from '@/lib/firebase-admin';
 import { EventTestimonial } from '@/lib/types';
 
-export async function POST(
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -126,11 +127,13 @@ export async function POST(
     );
   }
 }
+);
 
-export async function PUT(
+export const PUT = withMetrics(async function PUT(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   // PUT is handled the same as POST for updating testimonials
   return POST(request, context);
 }
+);

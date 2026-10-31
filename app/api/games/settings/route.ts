@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/games/settings - Get all game settings
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const settingsSnap = await adminDb.doc('settings/gamePoints').get();
     const settings = settingsSnap.exists ? settingsSnap.data() : {};
@@ -13,10 +14,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // POST /api/games/settings - Admin only: Update game settings
 // Body: { gameId, name, basePoints, retryPenalty, maxRetries, scratcher, setAsGameOfDay }
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const authorization = req.headers.get('authorization');
@@ -82,9 +84,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // PUT /api/games/settings - Admin only: Bulk update all game settings
-export async function PUT(req: NextRequest) {
+export const PUT = withMetrics(async function PUT(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const authorization = req.headers.get('authorization');
@@ -127,4 +130,5 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 

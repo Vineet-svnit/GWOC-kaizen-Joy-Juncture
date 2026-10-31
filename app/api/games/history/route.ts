@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/games/history?gameId=sudoku
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     // Check if Firebase Admin is available
     if (!adminAuth || !adminDb) {
@@ -53,4 +54,5 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ history: [] }, { status: 200 });
   }
 }
+);
 

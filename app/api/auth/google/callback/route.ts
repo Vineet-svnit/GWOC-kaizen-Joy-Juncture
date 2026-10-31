@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: NextRequest) {
   console.log(' Google OAuth callback started');
   console.log('Request URL:', request.url);
   
@@ -81,3 +82,4 @@ console.error(' Google Calendar integration error:', error);
     );
   }
 }
+);

@@ -3,10 +3,11 @@ import { auth } from '@/lib/firebase-admin';
 import { adminDb } from '@/lib/firebaseAdmin'
 import { Timestamp, FieldValue } from 'firebase-admin/firestore';
 
+import { withMetrics } from '@/lib/api-metrics';
 export const runtime = 'nodejs';
 
 
-export async function GET(req: NextRequest) {
+export const GET = withMetrics(async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status') as 'past' | 'upcoming' | null;
@@ -57,9 +58,10 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+);
 
 
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
 
 
@@ -144,3 +146,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+);

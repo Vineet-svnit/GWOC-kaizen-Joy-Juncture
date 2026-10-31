@@ -4,7 +4,8 @@ import twilio from 'twilio';
 import { otpStore, generateOTP, OTP_EXPIRY_MS } from '@/lib/otpStore';
 import { SmsTemplates } from '@/lib/sms-templates';
 
-export async function POST(req: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const authorization = req.headers.get('authorization');
 
@@ -165,3 +166,4 @@ export async function POST(req: NextRequest) {
     }, { status: 500 });
   }
 }
+);

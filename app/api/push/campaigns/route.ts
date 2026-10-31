@@ -2,7 +2,8 @@ import { db, auth } from '@/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { sendNotifications } from '@/lib/notification-service';
 
-export async function POST(request: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
@@ -187,4 +188,5 @@ export async function POST(request: Request) {
     );
   }
 }
+);
 

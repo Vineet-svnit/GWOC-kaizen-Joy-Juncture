@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { FieldValue, Transaction } from 'firebase-admin/firestore';
 
-export async function POST(req: Request) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(req: Request) {
     try {
         const body = await req.json();
         const { 
@@ -115,3 +116,4 @@ export async function POST(req: Request) {
         );
     }
 }
+);

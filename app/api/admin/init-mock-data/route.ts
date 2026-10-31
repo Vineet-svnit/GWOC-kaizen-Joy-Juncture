@@ -1,3 +1,4 @@
+import { withMetrics } from '@/lib/api-metrics';
 /**
  * API Route to Initialize Mock Data
  * Call GET /api/admin/init-mock-data to populate Firestore with demo data
@@ -5,7 +6,7 @@
 
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export const GET = withMetrics(async function GET() {
   try {
     // Dynamically import to avoid Firebase initialization at build time
     const { initializeAllMockData } = await import('@/lib/initMockData');
@@ -25,3 +26,4 @@ export async function GET() {
     );
   }
 }
+);

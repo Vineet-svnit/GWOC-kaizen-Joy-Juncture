@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { getServerTodayString } from '@/lib/date-utils';
 
+import { withMetrics } from '@/lib/api-metrics';
 // GET /api/games/game-of-the-day
-export async function GET() {
+export const GET = withMetrics(async function GET() {
   try {
     const today = getServerTodayString();
     const gotdSnap = await adminDb.doc('settings/gameOfTheDay').get();
@@ -52,9 +53,10 @@ export async function GET() {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);
 
 // POST /api/games/game-of-the-day - Admin only: manually set game of the day
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // Get Firebase Auth token from Authorization header
     const authorization = req.headers.get('authorization');
@@ -135,3 +137,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+);

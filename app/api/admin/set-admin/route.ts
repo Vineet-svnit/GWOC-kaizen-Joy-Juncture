@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { withMetrics } from '@/lib/api-metrics';
 /**
  * Development endpoint to promote a user to admin
  * In production, this should require proper authorization
  */
-export async function POST(request: NextRequest) {
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     const { adminDb, adminAuth } = await import('@/app/api/auth/firebase-admin');
     const { email } = await request.json();
@@ -49,3 +50,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+);

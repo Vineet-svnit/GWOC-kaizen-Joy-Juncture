@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEventById, updateEventById, deleteEventById } from '@/lib/db/events';
 import { auth, db } from '@/lib/firebase-admin'
-export async function GET(
+export const GET = withMetrics(async function GET(
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await context.params;
         
-        // Use Admin SDK to fetch event data ensures fresh data and bypasses client cache
+        import { withMetrics } from '@/lib/api-metrics';
+// Use Admin SDK to fetch event data ensures fresh data and bypasses client cache
         const eventDoc = await db.collection('events').doc(id).get();
         
         if (!eventDoc.exists) {
@@ -60,9 +61,10 @@ export async function GET(
         );
     }
 }
+);
 
 
-export async function PATCH(
+export const PATCH = withMetrics(async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -119,8 +121,9 @@ export async function PATCH(
     );
   }
 }
+);
 
-export async function DELETE(
+export const DELETE = withMetrics(async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
@@ -165,3 +168,4 @@ export async function DELETE(
     );
   }
 }
+);

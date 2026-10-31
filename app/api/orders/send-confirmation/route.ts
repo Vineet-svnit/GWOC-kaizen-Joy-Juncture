@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-export async function POST(req: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { orderId, email, name, items, totalPrice, shippingAddress } = body;
@@ -24,3 +25,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to send email', details: error.message }, { status: 500 });
   }
 }
+);

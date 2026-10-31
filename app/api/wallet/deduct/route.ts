@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+import { withMetrics } from '@/lib/api-metrics';
 // POST /api/wallet/deduct
-export async function POST(req: NextRequest) {
+export const POST = withMetrics(async function POST(req: NextRequest) {
   try {
     // Check if Firebase Admin is available
     if (!adminAuth || !adminDb) {
@@ -109,3 +110,4 @@ export async function POST(req: NextRequest) {
     }, { status: 500 });
   }
 }
+);

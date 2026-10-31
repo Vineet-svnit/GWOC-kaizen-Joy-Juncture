@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBlogPosts } from '@/lib/db/blog';
 
-export async function GET(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const GET = withMetrics(async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
@@ -29,3 +30,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+);

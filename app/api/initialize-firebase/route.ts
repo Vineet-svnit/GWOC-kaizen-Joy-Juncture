@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+import { withMetrics } from '@/lib/api-metrics';
+export const POST = withMetrics(async function POST(request: NextRequest) {
   try {
     const { initializeFirebaseData } = await import('@/lib/initializeFirebaseData');
     const result = await initializeFirebaseData();
@@ -16,8 +17,9 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+);
 
-export async function GET(request: NextRequest) {
+export const GET = withMetrics(async function GET(request: NextRequest) {
   try {
     const { initializeFirebaseData } = await import('@/lib/initializeFirebaseData');
     const result = await initializeFirebaseData();
@@ -33,3 +35,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+);
