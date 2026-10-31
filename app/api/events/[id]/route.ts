@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEventById, updateEventById, deleteEventById } from '@/lib/db/events';
 import { auth, db } from '@/lib/firebase-admin'
+import { withMetrics } from '@/lib/api-metrics';
 export const GET = withMetrics(async function GET(
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -8,7 +9,6 @@ export const GET = withMetrics(async function GET(
     try {
         const { id } = await context.params;
         
-        import { withMetrics } from '@/lib/api-metrics';
 // Use Admin SDK to fetch event data ensures fresh data and bypasses client cache
         const eventDoc = await db.collection('events').doc(id).get();
         
